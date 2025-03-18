@@ -22,8 +22,8 @@ npm install --legacy-peer-deps
 # Fix npm security vulnerabilities (⚠️ Avoid disrupting CircleCI execution)
 npm audit fix --force || true
 # Recreate HTTPS certificate files
-# echo "$PRIVATE_KEY" | sed 's/\\n/\n/g' > privatekey.pem
-# echo "$SERVER" | sed 's/\\n/\n/g' > server.crt
+echo "$PRIVATE_KEY" | sed 's/\\n/\n/g' > privatekey.pem
+echo "$SERVER" | sed 's/\\n/\n/g' > server.crt
 # Stop the old process and start a new one
 pm2 stop DevOpsSec-Group-Project || true
 pm2 restart DevOpsSec-Group-Project || pm2 start ./bin/www --name DevOpsSec-Group-Project

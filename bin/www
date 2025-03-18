@@ -1,90 +1,137 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
+/** 
+ * Module dependencies. 
+ */ 
 
-var app = require('../app');
-var debug = require('debug')('mathapp:server');
-var http = require('http');
+var app = require('../app'); 
+var debug = require('debug')('phishsense:server'); 
+var http = require('http'); 
 
-/**
- * Get port from environment and store in Express.
- */
+/** 
+ * Normalize a port into a number, string, or false. 
+ */ 
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+function normalizePort(val) { 
+  var port = parseInt(val, 10); 
 
-/**
- * Create HTTP server.
- */
+  if (isNaN(port)) { 
+    // named pipe 
+    return val; 
+  } 
 
-var server = http.createServer(app);
+  if (port >= 0) { 
+    // port number 
+    return port; 
+  } 
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  return false; 
+} 
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+/** 
+ * Event listener for HTTP server "error" event. 
+ */ 
 
-/**
- * Normalize a port into a number, string, or false.
- */
+function onError(error) { 
+  if (error.syscall !== 'listen') { 
+    throw error; 
+  } 
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+  var bind = typeof port === 'string' 
+    ? 'Pipe ' + port 
+    : 'Port ' + port; 
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+  // handle specific listen errors with friendly messages 
+  switch (error.code) { 
+    case 'EACCES': 
+      console.error(bind + ' requires elevated privileges'); 
+      process.exit(1); 
+      break; 
+    case 'EADDRINUSE': 
+      console.error(bind + ' is already in use'); 
+      process.exit(1); 
+      break; 
+    default: 
+      throw error; 
+  } 
+} 
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+/** 
+ * Event listener for HTTP server "listening" event. 
+ */ 
 
-  return false;
-}
+function onListening() { 
+  var addr = server.address(); 
+  var bind = typeof addr === 'string' 
+    ? 'pipe ' + addr 
+    : 'port ' + addr.port; 
+  debug('Listening on ' + bind); 
+} 
 
-/**
- * Event listener for HTTP server "error" event.
- */
+// Add HTTPS Section 
 
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+var fs = require('fs'); 
+var https = require('https'); 
+var port = normalizePort(process.env.PORT || '8080'); 
+var https_port    =   process.env.PORT_HTTPS || 8443;  
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+var options = {}; 
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
+if(process.env.ENV !== "DEV") { 
+  var privatekey = fs.readFileSync('privatekey.pem', "utf8"); 
+  console.log(typeof privatekey); 
+  var cert = fs.readFileSync('server.crt', "utf8"); 
+  var header = "-----BEGIN PRIVATE KEY-----"; 
+  var footer = "-----END PRIVATE KEY-----"; 
+  console.log(privatekey.split(header)); 
+  privatekey= privatekey.split(header)[1]; 
+  privatekey = privatekey.split(footer)[0]; 
+  privatekey = header + "\n" + privatekey.replace(/ /g, "\n") + footer+"\n"; 
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+  console.log(privatekey); 
 
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+  var header = "-----BEGIN CERTIFICATE-----"; 
+  var footer = "-----END CERTIFICATE-----"; 
+  cert= cert.split(header)[1]; 
+  cert = cert.split(footer)[0]; 
+  cert = header + "\n" + cert.replace(/ /g, "\n") + footer+"\n"; 
+
+  var options = { 
+    key  : privatekey, 
+    cert : cert 
+  }; 
+
+  app.set("port",https_port); 
+
+  /* 
+  ° Create HTTPS server. 
+  */  
+  var server = https.createServer(options, app).listen(https_port, function () { 
+    console.log('Magic happens on port ' + https_port);  
+  }); 
+
+  /** 
+  * Listen on provided port, on all network interfaces. 
+  */ 
+
+  server.on('error', onError); 
+  server.on('listening', onListening); 
+
+  // Redirect from http port to https 
+  http.createServer(function (req, res) { 
+    res.writeHead(301, { "Location": "https://" + req.headers['host'].replace(port,https_port) + req.url }); 
+    console.log("http requet, will go to >> "); 
+    console.log("https://" + req.headers['host'].replace(port,https_port) + req.url ); 
+    res.end(); 
+  }).listen(port); 
+} else { 
+  var server = http.createServer(app); 
+
+  /** 
+   * Listen on provided port, on all network interfaces. 
+   */ 
+
+  server.listen(port); 
+  server.on('error', onError); 
+  server.on('listening', onListening); 
+} 
