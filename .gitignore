@@ -1,1 +1,4 @@
 node_modules/
+.git/
+private.pem
+server.crt

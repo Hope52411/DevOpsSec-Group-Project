@@ -23,6 +23,7 @@ jobs:
       - image: circleci/node:10.16.3
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@5'  
@@ -38,6 +39,15 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+      - run:
+          name: docker-login
+          command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run:
+          name: Build Docker Image
+          command: docker build -t $IMAGE_NAME:latest .
+      - run:
+          name: Publish Docker Image
+          command: docker push $IMAGE_NAME
   deploy:
     docker:
       - image: circleci/node:10.16.3
