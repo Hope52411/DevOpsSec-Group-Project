@@ -46,6 +46,6 @@ jobs:
       - run:
           name: Deploy Application
           command: ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS 
-           rm -rf DevOpsSec-Group-Project/; 
+           "rm -rf DevOpsSec-Group-Project/; 
            git clone https://github.com/Hope52411/DevOpsSec-Group-Project.git; 
            source DevOpsSec-Group-Project/deploy.sh"
