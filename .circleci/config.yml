@@ -9,11 +9,13 @@ workflows:
             branches:
               only:
                 - main
+                - Aloisio
       - deploy:
           filters:
             branches:
               only:
                 - main
+                - Aloisio
           requires:
             - build
 jobs:
