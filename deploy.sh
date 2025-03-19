@@ -19,7 +19,7 @@ sudo npm install -g pm2
 cd ~/DevOpsSec-Group-Project
 # Install npm dependencies
 npm install --legacy-peer-deps
-# Fix npm security vulnerabilities (⚠️ Avoid disrupting CircleCI execution)
+# Fix npm security vulnerabilities ( Avoid disrupting CircleCI execution)
 npm audit fix --force || true
 # Recreate HTTPS certificate files
 echo "$PRIVATE_KEY" | sed 's/\\n/\n/g' > privatekey.pem

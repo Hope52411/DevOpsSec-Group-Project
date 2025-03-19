@@ -1,48 +1,35 @@
 #!/usr/bin/env node
 
-/** 
- * Module dependencies. 
- */ 
-
+//import modules
 var app = require('../app'); 
 var debug = require('debug')('phishsense:server'); 
 var http = require('http'); 
 
-/** 
- * Normalize a port into a number, string, or false. 
- */ 
 
 function normalizePort(val) { 
   var port = parseInt(val, 10); 
 
-  if (isNaN(port)) { 
-    // named pipe 
+  if (isNaN(port)) { //return value if port is not a number 
     return val; 
-  } 
-
-  if (port >= 0) { 
-    // port number 
+  } else if (port >= 0) { //return port if port is greater than 0
     return port; 
+  }else { 
+    return false; 
   } 
-
-  return false; 
 } 
 
-/** 
- * Event listener for HTTP server "error" event. 
- */ 
-
-function onError(error) { 
-  if (error.syscall !== 'listen') { 
+function onError(error) { // Event listener for HTTP server error
+  if (error.syscall !== 'listen') { //throw error if error is not a listen error
     throw error; 
   } 
-
-  var bind = typeof port === 'string' 
-    ? 'Pipe ' + port 
-    : 'Port ' + port; 
-
-  // handle specific listen errors with friendly messages 
-  switch (error.code) { 
+  var bind;
+  if (typeof port === 'string') {//check if port is a string
+    bind = 'Pipe ' + port;//set bind to pipe
+  } else {
+    bind = 'Port ' + port;//set bind to port
+  }
+ 
+  switch (error.code) { // switch case for error code ecces and addrinuse
     case 'EACCES': 
       console.error(bind + ' requires elevated privileges'); 
       process.exit(1); 
@@ -56,82 +43,53 @@ function onError(error) {
   } 
 } 
 
-/** 
- * Event listener for HTTP server "listening" event. 
- */ 
+function onListening() {// Event listener for HTTP server "listening" 
+  var address = server.address();//get address of server
 
-function onListening() { 
-  var addr = server.address(); 
-  var bind = typeof addr === 'string' 
-    ? 'pipe ' + addr 
-    : 'port ' + addr.port; 
-  debug('Listening on ' + bind); 
-} 
+  let bind;
+  if (typeof address === 'string') {//check if address is a string
+    bind = 'pipe ' + address; //
+  } else {
+    bind = 'port ' + address.port; //set bind to port
+  }
+  debug('Listening on ' + bind); // print listening on bind
+}
 
-// Add HTTPS Section 
 
-var fs = require('fs'); 
-var https = require('https'); 
+// ======================================== HTTPS =========================================
+
+var fs = require('fs'); // file system
+var https = require('https'); // https module
 var port = normalizePort(process.env.PORT || '8080'); 
-var https_port    =   process.env.PORT_HTTPS || 8443;  
-
+var https_port = process.env.PORT_HTTPS || 8443;  
 var options = {}; 
 
 if(process.env.ENV !== "DEV") { 
-  var privatekey = fs.readFileSync('privatekey.pem', "utf8"); 
-  console.log(typeof privatekey); 
-  var cert = fs.readFileSync('server.crt', "utf8"); 
-  var header = "-----BEGIN PRIVATE KEY-----"; 
-  var footer = "-----END PRIVATE KEY-----"; 
-  console.log(privatekey.split(header)); 
-  privatekey= privatekey.split(header)[1]; 
-  privatekey = privatekey.split(footer)[0]; 
-  privatekey = header + "\n" + privatekey.replace(/ /g, "\n") + footer+"\n"; 
+  var privatekey = fs.readFileSync('privatekey.pem', "utf8"); //  read private key and assign to privatekey variable
+  var cert = fs.readFileSync('server.crt', "utf8"); // read server certificate and assign to cert variable
 
-  console.log(privatekey); 
-
-  var header = "-----BEGIN CERTIFICATE-----"; 
-  var footer = "-----END CERTIFICATE-----"; 
-  cert= cert.split(header)[1]; 
-  cert = cert.split(footer)[0]; 
-  cert = header + "\n" + cert.replace(/ /g, "\n") + footer+"\n"; 
-
-  var options = { 
+  var options = {   // set options array with private key and certificate for https
     key  : privatekey, 
     cert : cert 
   }; 
 
-  app.set("port",https_port); 
-
-  /* 
-  ° Create HTTPS server. 
-  */  
-  var server = https.createServer(options, app).listen(https_port, function () { 
-    console.log('Magic happens on port ' + https_port);  
+  app.set("port",https_port); //  set port to https port
+  var server = https.createServer(options, app).listen(https_port, function () {  // create https server
+    console.log('connected to port ' + https_port);  
   }); 
 
-  /** 
-  * Listen on provided port, on all network interfaces. 
-  */ 
-
   server.on('error', onError); 
   server.on('listening', onListening); 
 
-  // Redirect from http port to https 
-  http.createServer(function (req, res) { 
-    res.writeHead(301, { "Location": "https://" + req.headers['host'].replace(port,https_port) + req.url }); 
-    console.log("http requet, will go to >> "); 
-    console.log("https://" + req.headers['host'].replace(port,https_port) + req.url ); 
+  
+  http.createServer(function (req, res) { // create http server
+    res.writeHead(301, { "Location": "https://" + req.headers['host'].replace(port,https_port) + req.url }); // redirect http to https server
     res.end(); 
   }).listen(port); 
-} else { 
-  var server = http.createServer(app); 
-
-  /** 
-   * Listen on provided port, on all network interfaces. 
-   */ 
+} else { // if not in production environment
+  var server = http.createServer(app); // create http server
 
   server.listen(port); 
-  server.on('error', onError); 
-  server.on('listening', onListening); 
+  server.on('error', onError); // Event listener for HTTP server error
+  server.on('listening', onListening); // Event listener for HTTP server "listening"
 } 
