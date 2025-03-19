@@ -2,8 +2,38 @@
 <html>
   <head>
     <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
   <body>
-    <h1>deployment is successful</h1>
+    <h1>Task Management App</h1>
+
+    <!-- Add Task Form -->
+    <form action="/tasks" method="POST">
+      <input type="text" name="title" placeholder="New Task" required>
+      <button type="submit">Add Task</button>
+    </form>
+
+    <ul>
+      <% tasks.forEach(function(task) { %>
+        <li>
+          <!-- Toggle Done Form -->
+          <form action="/tasks/<%= task.id %>/update" method="POST" style="display:inline;">
+            <input type="hidden" name="done" value="<%= !task.done %>">
+            <button type="submit"><%= task.done ? "Undo" : "Done" %></button>
+          </form>
+
+          <!-- Edit Task Title -->
+          <form action="/tasks/<%= task.id %>/update" method="POST" style="display:inline;">
+            <input type="text" name="title" value="<%= task.title %>" required>
+            <button type="submit">Update</button>
+          </form>
+
+          <!-- Delete Task -->
+          <form action="/tasks/<%= task.id %>/delete" method="POST" style="display:inline;">
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
   </body>
 </html>

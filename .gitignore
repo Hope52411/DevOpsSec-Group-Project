@@ -1,4 +1,4 @@
 node_modules/
 .git/
-private.pem
+privatekey.pem
 server.crt
