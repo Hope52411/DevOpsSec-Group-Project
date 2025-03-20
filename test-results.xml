@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.0400" tests="2" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-03-20T16:50:46" tests="0" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Task Management Routes" timestamp="2025-03-20T16:50:46" tests="2" file="C:\Users\Alois\OneDrive\Outlook\4th Year NCIrl\1st Semester\DevOpsSec\CA40\Saved copy\DevOpsSec-Group-Project\test\index.test.js" time="0.0400" failures="0">
+    <testcase name="Task Management Routes should return the home page with status 200" time="0.0240" classname="should return the home page with status 200">
+    </testcase>
+    <testcase name="Task Management Routes should create a new task and redirect" time="0.0160" classname="should create a new task and redirect">
+    </testcase>
+  </testsuite>
+</testsuites>

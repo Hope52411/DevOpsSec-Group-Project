@@ -49,3 +49,4 @@ router.post('/tasks/:id/delete', function(req, res) {
 
 
 module.exports = router;
+module.exports.tasks = tasks; //export the tasks array to be used in the test file
