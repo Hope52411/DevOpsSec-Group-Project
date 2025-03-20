@@ -18,6 +18,8 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "chai": "^5.2.0",
+    "nodemon": "^2.0.7",
+    "supertest": "^7.1.0"
   }
 }
