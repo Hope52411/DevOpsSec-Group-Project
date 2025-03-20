@@ -17,9 +17,16 @@ Node.js, JavaScript,HTML, Mocha+Chai, CircleCI CI/CD Pipeline, AWS EC2, Docker
 
 # Initiating Project
 1. Use the cd command to navigate to the downloaded projects directory
-2. Run: 
-``npm install``
+2. Run to install dependencies: 
+```bash
+npm install
+npx mocha --reporter mocha-circleci-reporter test/*.js # for testing
+```
 3. Add "privatekey.pem" and "server.crt" files to the project directory 
-4. Run the npm start command to run the project
+4. Run to start the npm local server:
+```bash
+npm start
+```
+
 
 ***
