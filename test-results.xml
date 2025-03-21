@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="0.0570" tests="4" failures="0">
-  <testsuite name="Root Suite" timestamp="2025-03-21T11:28:20" tests="0" time="0.0000" failures="0">
+<testsuites name="Mocha Tests" time="0.0530" tests="4" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-03-21T14:59:40" tests="0" time="0.0000" failures="0">
   </testsuite>
-  <testsuite name="Task Management Routes" timestamp="2025-03-21T11:28:20" tests="4" file="C:\Users\Alois\OneDrive\Outlook\4th Year NCIrl\1st Semester\DevOpsSec\CA40\DevOpsSec-Group-Project\test\index.test.js" time="0.0570" failures="0">
-    <testcase name="Task Management Routes should return the home page with status 200" time="0.0260" classname="should return the home page with status 200">
+  <testsuite name="Testing the routes - integration testing" timestamp="2025-03-21T14:59:40" tests="4" file="C:\Users\Alois\OneDrive\Outlook\4th Year NCIrl\1st Semester\DevOpsSec\CA40\DevOpsSec-Group-Project\test\index.test.js" time="0.0530" failures="0">
+    <testcase name="Testing the routes - integration testing should return the home page with status 200" time="0.0230" classname="should return the home page with status 200">
     </testcase>
-    <testcase name="Task Management Routes should create a new task and redirect" time="0.0130" classname="should create a new task and redirect">
+    <testcase name="Testing the routes - integration testing should create a new task and redirect" time="0.0140" classname="should create a new task and redirect">
     </testcase>
-    <testcase name="Task Management Routes should update a task title" time="0.0100" classname="should update a task title">
+    <testcase name="Testing the routes - integration testing should update a task title" time="0.0100" classname="should update a task title">
     </testcase>
-    <testcase name="Task Management Routes should delete a task" time="0.0080" classname="should delete a task">
+    <testcase name="Testing the routes - integration testing should delete a task" time="0.0060" classname="should delete a task">
     </testcase>
   </testsuite>
 </testsuites>
