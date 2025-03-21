@@ -3,7 +3,9 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app');
 
-describe('Task Management Routes', () => {
+
+
+describe('Testing the routes - integration testing', () => {
 
   // Test the GET response
   it('should return the home page with status 200', (done) => {
@@ -23,6 +25,7 @@ describe('Task Management Routes', () => {
         done();
       });
   });
+  
   // Test POST /tasks/:id/update
   it('should update a task title', (done) => {
     // First we create a task
@@ -73,3 +76,4 @@ describe('Task Management Routes', () => {
   });
 
 });
+
