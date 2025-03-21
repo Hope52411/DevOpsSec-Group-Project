@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: "Task Management", tasks }); // Render the index view
 });
 
-// new task
+// createa new task
 router.post('/tasks', function(req, res) {
   const { title } = req.body;//req.body is the data sent by the form
   const newTask = { id: Date.now(), title, done: false }; // create a new task object 
